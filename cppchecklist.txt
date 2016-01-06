@@ -1,0 +1,122 @@
+Boolean
+- comparison of a boolean expression with an integer other than 0 or 1
+- comparison of a function returning boolean value using relational operator
+- comparison of a boolean value with boolean value using relational operator
+- using bool in bitwise expression
+Bounds checking
+Out of bounds checking:
+- Array index out of bounds detection by value flow analysis
+- Accessing array with negative index
+- Accessing array with index variable before checking its value
+- Check for large enough arrays being passed to functions
+- Allocating memory with a negative size
+
+Class
+Check the code for each class.
+- Missing constructors and copy constructors
+- Are all variables initialized by the constructors?
+- Are all variables assigned by 'operator='?
+- If it's a base class, check that the destructor is virtual
+- Are there unused private functions?
+- 'operator=' should return reference to self
+- 'operator=' should check for assignment to self
+- Constness for member functions
+- Call of pure virtual function in constructor/destructor
+
+Condition
+Match conditions with assignments and other conditions:
+- Mismatching assignment and comparison => comparison is always true/false
+- Mismatching lhs and rhs in comparison => comparison is always true/false
+- Comparisons of modulo results that are always true/false.
+
+Exception Safety
+Checking exception safety
+- Throwing exceptions in destructors
+- Throwing a copy of a caught exception instead of rethrowing the original exception
+- Throwing exception in noexcept, nothrow(), attribute((nothrow)) or __declspec(nothrow) function
+- Unhandled exception specification when calling function foo()
+IO using format string
+Check format string input/output operations.
+- Bad usage of the function 'sprintf' (overlapping data)
+- Missing or wrong width specifiers in 'scanf' format string
+- Use a file that has been closed
+- File input/output without positioning results in undefined behaviour
+- Read to a file that has only been opened for writing (or vice versa)
+- Repositioning operation on a file opened in append mode
+- Using fflush() on an input stream
+- Invalid usage of output stream. For example: 'std::cout << std::cout;'
+- Wrong number of arguments given to 'printf' or 'scanf;'
+
+Memory leaks (class variables)
+If the constructor allocate memory then the destructor must deallocate it.
+
+Memory leaks (function variables)
+Is there any allocated memory when a function goes out of scope
+
+Non reentrant functions
+Warn if any of these non reentrant functions are used:
+- gmtime
+- localtime
+
+Null pointer
+Null pointers
+- null pointer dereferencing
+
+Obsolete functions
+Warn if any of these obsolete functions are used:
+- gets
+- alloca
+- asctime
+- asctime_r
+- bcmp
+- bcopy
+- bsd_signal
+- bzero
+- ctime_r
+- ftime
+- usleep
+
+
+Other
+Other checks
+- division with zero
+- bitwise operation with negative right operand
+- return value of certain functions not used
+- C-style pointer cast in C++ code
+- passing parameter by value
+- redundant assignment, increment, or bitwise operation in a switch statement
+- assignment of a variable to itself
+- Clarify calculation with parentheses
+- Array filled incompletely using memset/memcpy/memmove.
+- identical code in both branches of if/else or ternary operator.
+
+Sizeof
+sizeof() usage checks
+- sizeof for array given as function argument
+- sizeof for numeric given as function argument
+- using sizeof(pointer) instead of the size of pointed data
+
+String
+Detect misusage of C-style strings:
+- overlapping buffers passed to sprintf as source and destination
+- incorrect length arguments for 'substr' and 'strncmp'
+- suspicious condition (runtime comparison of string literals)
+
+Type
+Type checks
+- possible loss of information when assigning int result to long variable
+- possible loss of information when returning int result as long return value
+Uninitialized variables
+Uninitialized variables
+- using uninitialized local variables
+- using allocated data before it has been initialized
+- using dead pointer
+
+UnusedVar
+UnusedVar checks
+- unused variable
+- allocated but unused variable
+- unred variable
+- unassigned variable
+- unused struct member
+
