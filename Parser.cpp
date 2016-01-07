@@ -1,6 +1,3 @@
-// Parser.cpp : Defines the entry point for the console application.
-//
-
 #include "stdafx.h"
 #include <string>
 #include <iostream>
@@ -8,9 +5,9 @@
 #include <stdio.h>
 #include <time.h>
 
-bool PrintTime(void);
+bool PrintTime();
 uint16_t GetFileSize(char* filename);
-std::string read_file(const char *filename);
+std::string ReadFile(const char *filename);
 
 struct fileData
 {
@@ -25,21 +22,29 @@ class Parser
 	char* Config_File = "c:\Parser\config.txt";
 public:
 	Parser();
+
+	Parser(fileData* file_metadata);
+
 	~Parser();
 	bool enabled;
 	fileData* file_metadata;
-	Parser operator=(const Parser& other);
-	void ParseFile(void);
+	Parser operator=(Parser& other);
+	void ParseFile();
 
 private:
 	std::string folderLocation;
 	char files_per_run;
 	int warning_level;
-	
+
 };
 
 Parser::Parser() :files_per_run(char(2)), file_metadata(new fileData())
 {
+}
+
+Parser::Parser(fileData* file_metadata) : Parser()
+{
+	this->file_metadata = file_metadata;
 }
 
 Parser::~Parser()
@@ -48,22 +53,24 @@ Parser::~Parser()
 	std::ifstream file("temp.txt", std::ios::in);
 	if (!file)
 	{
-		//throw("temp file not deleted"); //uncomment
+		throw("temp file not deleted");
 	}
 }
 
-Parser Parser::operator=(const Parser& other)
+Parser Parser::operator=(Parser& other)
 {
-	file_metadata = other.file_metadata;
-	return *this;
+	other.file_metadata = file_metadata;
+	return other;
 }
 
-void Parser::ParseFile(void)
+void Parser::ParseFile()
 {
-	const char* test_file = "C:\\Users\\Jack\\test.txt";
-	std::cout << read_file(test_file);
 	std::cout << "parsing file\n";
+	ReadFile(file_metadata->name);
+	std::cout << "file " << file_metadata->name << "has been parsed!\n";
 }
+
+
 
 int main()
 {
@@ -82,24 +89,22 @@ int main()
 		std::cout << "input is wrong length\n";
 	}
 
-	//gets(input); //uncomment
-	std::cin >> input; //delete
+	std::cin >> input;
 
-	// if (strcmp_pass == strcmp(start, input)) //uncomment
+	if (strcmp_pass == strcmp(start, input))
 	{
 		char filename[32];
-		
+
 
 		std::cout << "give name of file to parse:  ";
-		std::cin >> filename; //comment
-		// gets(filename); //uncomment
-		std::cout << filename <<"\n";
-		
-		Parser new_parser;
-		//new_parser.enabled = true;
-		//new_parser.file_metadata->file_size = (char)GetFileSize(filename);
+		std::cout << filename << "\n";
+
+		Parser new_parser(file_metadata);
+		new_parser.enabled = true;
+		new_parser.file_metadata->file_size = GetFileSize(filename);
 		new_parser.ParseFile();
-		
+		// more awsome code yet to come
+
 	}
 	if (strcmp_pass == 0)
 	{
@@ -113,7 +118,7 @@ int main()
 uint16_t GetFileSize(char* filename)
 {
 	//code to be completed
-	//just return an acceptable lenght for now
+	//just return an acceptable length for now
 	return UINT16_MAX;
 }
 
@@ -123,12 +128,12 @@ bool PrintTime()
 	struct tm * time_info;
 
 	time(&raw_time);
-	// time_info = localtime(&raw_time);//uncomment
-	//std::cout << "Current local time and date: " << asctime(time_info); //uncomment
+	time_info = localtime(&raw_time);
+	std::cout << "Current local time and date: " << asctime(time_info);
 	return true;
 }
 
-std::string read_file(const char *filename)
+std::string ReadFile(const char *filename)
 {
 	std::ifstream file(filename, std::ios::in);
 	if (file)
@@ -140,7 +145,7 @@ std::string read_file(const char *filename)
 		file.read(&contents[0], contents.size());
 		file.close();
 		std::cout << contents;
-		return(contents);
+		return contents;
 	}
 	throw(errno);
 }
