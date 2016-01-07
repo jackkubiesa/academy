@@ -8,6 +8,9 @@
 #include <stdio.h>
 #include <time.h>
 
+bool PrintTime(void);
+uint16_t GetFileSize(char* filename);
+std::string read_file(const char *filename);
 
 struct fileData
 {
@@ -15,23 +18,6 @@ struct fileData
 	char file_size;
 	char no_of_lines;
 };
-
-
-std::string read_file(char *filename)
-{
-	std::ifstream file(filename, std::ios::in);
-	if (file)
-	{
-		std::string contents;
-		file.seekg(0, std::ios::end);
-		contents.resize(file.tellg());
-		file.seekg(0, std::ios::beg);
-		file.read(&contents[0], contents.size());
-		file.close();
-		return(contents);
-	}
-	throw(errno);
-}
 
 
 class Parser
@@ -43,6 +29,7 @@ public:
 	bool enabled;
 	fileData* file_metadata;
 	Parser operator=(const Parser& other);
+	void ParseFile(void);
 
 private:
 	std::string folderLocation;
@@ -53,8 +40,6 @@ private:
 
 Parser::Parser() :files_per_run(char(2)), file_metadata(new fileData())
 {
-	throw(20);
-	//read_file(Config_File); //uncomment
 }
 
 Parser::~Parser()
@@ -63,7 +48,7 @@ Parser::~Parser()
 	std::ifstream file("temp.txt", std::ios::in);
 	if (!file)
 	{
-		throw("temp file not deleted");
+		//throw("temp file not deleted"); //uncomment
 	}
 }
 
@@ -71,6 +56,13 @@ Parser Parser::operator=(const Parser& other)
 {
 	file_metadata = other.file_metadata;
 	return *this;
+}
+
+void Parser::ParseFile(void)
+{
+	const char* test_file = "C:\\Users\\Jack\\test.txt";
+	std::cout << read_file(test_file);
+	std::cout << "parsing file\n";
 }
 
 int main()
@@ -88,8 +80,6 @@ int main()
 	if (input[sizeof_start] != '\0')
 	{
 		std::cout << "input is wrong length\n";
-
-		printf("input is wrong length\n");
 	}
 
 	//gets(input); //uncomment
@@ -106,8 +96,9 @@ int main()
 		std::cout << filename <<"\n";
 		
 		Parser new_parser;
-		new_parser.enabled = true;
-		new_parser.file_metadata->file_size = (char)GetFileSize(filename);
+		//new_parser.enabled = true;
+		//new_parser.file_metadata->file_size = (char)GetFileSize(filename);
+		new_parser.ParseFile();
 		
 	}
 	if (strcmp_pass == 0)
@@ -132,7 +123,24 @@ bool PrintTime()
 	struct tm * time_info;
 
 	time(&raw_time);
-	time_info = localtime(&raw_time);
-	std::cout << "Current local time and date: " << asctime(time_info);
+	// time_info = localtime(&raw_time);//uncomment
+	//std::cout << "Current local time and date: " << asctime(time_info); //uncomment
 	return true;
+}
+
+std::string read_file(const char *filename)
+{
+	std::ifstream file(filename, std::ios::in);
+	if (file)
+	{
+		std::string contents;
+		file.seekg(0, std::ios::end);
+		contents.resize(file.tellg());
+		file.seekg(0, std::ios::beg);
+		file.read(&contents[0], contents.size());
+		file.close();
+		std::cout << contents;
+		return(contents);
+	}
+	throw(errno);
 }
